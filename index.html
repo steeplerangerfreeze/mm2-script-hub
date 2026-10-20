@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM2 Script Hub — Murder Mystery 2 Scripts for Windows</title>
+<style>
+  :root{
+    --bg-0:#070a16;
+    --bg-1:#0d1230;
+    --bg-2:#151a3f;
+    --accent:#7c5cff;
+    --accent-2:#3ddcff;
+    --accent-3:#ff5ca8;
+    --text:#e9ecff;
+    --muted:#9aa3c7;
+    --card:rgba(255,255,255,0.045);
+    --card-border:rgba(255,255,255,0.09);
+    --radius:18px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg-0);
+    background-image:
+      radial-gradient(1100px 600px at 12% -10%, rgba(124,92,255,0.28), transparent 60%),
+      radial-gradient(900px 550px at 92% 8%, rgba(61,220,255,0.16), transparent 60%),
+      radial-gradient(1000px 700px at 50% 110%, rgba(255,92,168,0.13), transparent 60%),
+      linear-gradient(160deg, #070a16 0%, #0d1230 45%, #12163a 70%, #0a0d20 100%);
+    background-attachment:fixed;
+    line-height:1.6;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  /* ============ NAV ============ */
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:14px 28px;
+    background:rgba(10,13,32,0.55);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    font-size:1.05rem;
+    letter-spacing:.3px;
+    white-space:nowrap;
+  }
+
+  .brand .logo{
+    width:32px;height:32px;
+    display:grid;place-items:center;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(124,92,255,0.45);
+    font-size:16px;
+  }
+
+  .brand span.grad{
+    background:linear-gradient(90deg,#c9b8ff,#7c5cff 40%,#3ddcff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    font-size:.92rem;
+    color:var(--muted);
+    font-weight:500;
+  }
+
+  .nav-links a{transition:color .2s ease;}
+  .nav-links a:hover{color:#fff;}
+
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:12px;
+    font-weight:700;
+    font-size:.9rem;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),#5b3df0);
+    box-shadow:0 8px 24px rgba(124,92,255,0.45);
+    border:1px solid rgba(255,255,255,0.18);
+    transition:transform .18s ease, box-shadow .18s ease;
+    white-space:nowrap;
+  }
+
+  .nav-cta:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(124,92,255,0.6);
+  }
+
+  /* ============ LAYOUT ============ */
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  section{padding:84px 0;}
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:96px 0 64px;
+    text-align:center;
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:.8rem;
+    font-weight:600;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    color:#cbbdff;
+    background:rgba(124,92,255,0.12);
+    border:1px solid rgba(124,92,255,0.35);
+    box-shadow:0 0 24px rgba(124,92,255,0.22) inset;
+    margin-bottom:28px;
+  }
+
+  .pill .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--accent-2);
+    box-shadow:0 0 10px var(--accent-2);
+    animation:pulse 2s infinite;
+  }
+
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.55;transform:scale(.82);}
+  }
+
+  h1{
+    font-size:clamp(2.2rem,6vw,4rem);
+    line-height:1.08;
+    font-weight:900;
+    letter-spacing:-1.5px;
+    margin:0 auto 22px;
+    max-width:900px;
+  }
+
+  h1 .grad{
+    background:linear-gradient(92deg,#ffffff 0%,#c9b8ff 28%,#7c5cff 55%,#3ddcff 85%,#ff5ca8 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .hero p.lead{
+    max-width:640px;
+    margin:0 auto 38px;
+    font-size:1.06rem;
+    color:var(--muted);
+  }
+
+  .hero-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:52px;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:15px 32px;
+    border-radius:14px;
+    font-weight:700;
+    font-size:1rem;
+    border:1px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    cursor:pointer;
+  }
+
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent) 0%,#5b3df0 55%,#3b7dff 100%);
+    box-shadow:0 14px 38px rgba(124,92,255,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+
+  .btn-primary:hover{
+    transform:translateY(-3px);
+    box-shadow:0 20px 48px rgba(124,92,255,0.65), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .btn-ghost{
+    color:var(--text);
+    background:rgba(255,255,255,0.04);
+    border-color:rgba(255,255,255,0.16);
+    backdrop-filter:blur(8px);
+  }
+
+  .btn-ghost:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,0.08);
+    border-color:rgba(255,255,255,0.3);
+  }
+
+  .stats{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  .stat{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 22px;
+    border-radius:14px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    backdrop-filter:blur(10px);
+    font-size:.88rem;
+    color:var(--muted);
+    font-weight:600;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+
+  .stat:hover{border-color:rgba(124,92,255,0.5);transform:translateY(-2px);}
+  .stat strong{color:#fff;font-size:.95rem;font-weight:800;}
+  .stat .emo{font-size:1.05rem;}
+
+  /* ============ SECTION HEADS ============ */
+  .sec-head{
+    text-align:center;
+    margin-bottom:52px;
+  }
+
+  .sec-head .kicker{
+    display:inline-block;
+    font-size:.75rem;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    margin-bottom:14px;
+  }
+
+  .sec-head h2{
+    font-size:clamp(1.7rem,3.4vw,2.5rem);
+    font-weight:900;
+    letter-spacing:-.8px;
+    line-height:1.15;
+  }
+
+  .sec-head p{
+    color:var(--muted);
+    max-width:560px;
+    margin:14px auto 0;
+    font-size:.98rem;
+  }
+
+  /* ============ FEATURES GRID ============ */
+  .features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+
+  .card{
+    position:relative;
+    padding:30px 26px 32px;
+    border-radius:var(--radius);
+    background:linear-gradient(170deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid var(--card-border);
+    backdrop-filter:blur(12px);
+    overflow:hidden;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    opacity:.9;
+  }
+
+  .card:nth-child(2)::before{background:linear-gradient(90deg,var(--accent-2),#5b8dff);}
+  .card:nth-child(3)::before{background:linear-gradient(90deg,var(--accent-3),var(--accent));}
+  .card:nth-child(4)::before{background:linear-gradient(90deg,#ffd166,var(--accent-3));}
+  .card:nth-child(5)::before{background:linear-gradient(90deg,#3ddcff,#7c5cff);}
+  .card:nth-child(6)::before{background:linear-gradient(90deg,#7c5cff,#ff5ca8);}
+
+  .card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(124,92,255,0.45);
+    box-shadow:0 22px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(124,92,255,0.15);
+  }
+
+  .card .icon{
+    font-size:1.7rem;
+    width:52px;height:52px;
+    display:grid;place-items:center;
+    border-radius:14px;
+    background:rgba(124,92,255,0.12);
+    border:1px solid rgba(124,92,255,0.28);
+    margin-bottom:20px;
+  }
+
+  .card h3{
+    font-size:1.08rem;
+    font-weight:800;
+    margin-bottom:10px;
+    letter-spacing:-.2px;
+  }
+
+  .card p{
+    font-size:.9rem;
+    color:var(--muted);
+    line-height:1.65;
+  }
+
+  /* ============ HOW IT WORKS ============ */
+  .steps{
+    position:relative;
+    max-width:760px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:38px;
+  }
+
+  .steps::before{
+    content:"";
+    position:absolute;
+    left:27px;
+    top:14px;
+    bottom:14px;
+    width:2px;
+    background:linear-gradient(180deg,var(--accent),var(--accent-2) 50%,var(--accent-3));
+    opacity:.65;
+    border-radius:2px;
+  }
+
+  .step{
+    display:flex;
+    gap:24px;
+    align-items:flex-start;
+    position:relative;
+  }
+
+  .step .num{
+    flex:0 0 56px;
+    width:56px;height:56px;
+    display:grid;place-items:center;
+    border-radius:16px;
+    font-weight:900;
+    font-size:1.15rem;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),#3b7dff);
+    box-shadow:0 10px 26px rgba(124,92,255,0.4);
+    border:1px solid rgba(255,255,255,0.2);
+    position:relative;
+    z-index:2;
+  }
+
+  .step:nth-child(2) .num{background:linear-gradient(135deg,#3ddcff,#5b8dff);box-shadow:0 10px 26px rgba(61,220,255,0.32);}
+  .step:nth-child(3) .num{background:linear-gradient(135deg,#ff5ca8,#7c5cff);box-shadow:0 10px 26px rgba(255,92,168,0.32);}
+
+  .step .body{
+    padding-top:4px;
+  }
+
+  .step h3{
+    font-size:1.08rem;
+    font-weight:800;
+    margin-bottom:6px;
+  }
+
+  .step p{
+    font-size:.92rem;
+    color:var(--muted);
+  }
+
+  /* ============ FAQ ============ */
+  .faq{
+    max-width:800px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  details{
+    border-radius:14px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    backdrop-filter:blur(10px);
+    overflow:hidden;
+    transition:border-color .2s ease, background .2s ease;
+  }
+
+  details[open]{
+    border-color:rgba(124,92,255,0.5);
+    background:rgba(124,92,255,0.07);
+  }
+
+  summary{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:20px 24px;
+    font-weight:700;
+    font-size:.98rem;
+    cursor:pointer;
+    list-style:none;
+    user-select:none;
+  }
+
+  summary::-webkit-details-marker{display:none;}
+
+  summary .plus{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    display:grid;place-items:center;
+    font-size:1.4rem;
+    font-weight:400;
+    line-height:1;
+    color:var(--accent-2);
+    transition:transform .3s ease, color .3s ease;
+  }
+
+  details[open] summary .plus{
+    transform:rotate(45deg);
+    color:var(--accent-3);
+  }
+
+  details .answer{
+    padding:0 24px 22px;
+    font-size:.9rem;
+    color:var(--muted);
+    line-height:1.7;
+    border-top:1px solid rgba(255,255,255,0.06);
+    padding-top:16px;
+    margin:0 0 0;
+  }
+
+  /* ============ CTA BANNER ============ */
+  .cta-banner{
+    position:relative;
+    text-align:center;
+    padding:70px 32px;
+    border-radius:26px;
+    overflow:hidden;
+    background:linear-gradient(160deg, rgba(124,92,255,0.18), rgba(13,18,48,0.85) 55%, rgba(61,220,255,0.14));
+    border:1px solid rgba(124,92,255,0.35);
+    box-shadow:0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  .cta-banner::before{
+    content:"";
+    position:absolute;
+    top:-40%;left:50%;
+    transform:translateX(-50%);
+    width:820px;height:820px;
+    background:radial-gradient(circle, rgba(124,92,255,0.42) 0%, rgba(61,220,255,0.14) 35%, transparent 65%);
+    pointer-events:none;
+  }
+
+  .cta-banner .inner{position:relative;z-index:2;}
+
+  .cta-banner h2{
+    font-size:clamp(1.7rem,4vw,2.6rem);
+    font-weight:900;
+    letter-spacing:-1px;
+    margin-bottom:14px;
+  }
+
+  .cta-banner p{
+    color:var(--muted);
+    max-width:520px;
+    margin:0 auto 32px;
+    font-size:.98rem;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid rgba(255,255,255,0.08);
+    padding:34px 24px;
+    margin-top:20px;
+  }
+
+  .foot{
+    max-width:1120px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    flex-wrap:wrap;
+    font-size:.85rem;
+    color:var(--muted);
+  }
+
+  .foot .brand-sm{
+    display:flex;align-items:center;gap:9px;font-weight:700;color:var(--text);
+  }
+
+  .foot .brand-sm .logo{
+    width:24px;height:24px;border-radius:7px;
+    display:grid;place-items:center;font-size:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+
+  .foot a.gh{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--text);
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.04);
+    transition:background .2s ease, border-color .2s ease;
+  }
+
+  .foot a.gh:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.3);}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:900px){
+    .features{grid-template-columns:repeat(2,1fr);}
+    .nav-links{gap:18px;}
+  }
+
+  @media (max-width:640px){
+    .nav{padding:12px 16px;}
+    .nav-links{display:none;}
+    .nav-cta{padding:9px 16px;font-size:.85rem;}
+
+    .wrap{padding:0 18px;}
+    section{padding:60px 0;}
+
+    .hero{padding:64px 0 40px;}
+    .hero p.lead{font-size:.98rem;}
+
+    .hero-actions{flex-direction:column;width:100%;}
+    .hero-actions .btn{width:100%;}
+
+    .stats{gap:10px;}
+    .stat{padding:10px 16px;font-size:.8rem;}
+
+    .features{grid-template-columns:1fr;gap:16px;}
+
+    .steps::before{left:23px;}
+    .step{gap:18px;}
+    .step .num{flex:0 0 48px;width:48px;height:48px;font-size:1rem;border-radius:13px;}
+
+    .cta-banner{padding:48px 22px;border-radius:20px;}
+
+    .foot{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <a href="#" class="brand">
+    <span class="logo">🗡️</span>
+    <span>mm2-<span class="grad">script-hub</span></span>
+  </a>
+
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#faq">FAQ</a>
+  </div>
+
+  <a href="https://gitscore.cc" class="nav-cta" target="_blank" rel="noopener">
+    ⬇ Download
+  </a>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="pill">
+      <span class="dot"></span>
+      Murder Mystery 2 Scripts · Executor Ready
+    </div>
+
+    <h1>
+      <span class="grad">Dominate Murder Mystery 2</span><br>
+      with executor-ready Lua scripts
+    </h1>
+
+    <p class="lead">
+      mm2-script-hub is a free, open-source collection of Murder Mystery 2 scripts built for Windows —
+      aimbot, ESP, auto-pickup, coin farm, and knife throw assist. Drop the Lua in your executor and
+      play smarter in every round.
+    </p>
+
+    <div class="hero-actions">
+      <a href="https://gitscore.cc" class="btn btn-primary" target="_blank" rel="noopener">
+        ⬇ Download for Windows
+      </a>
+      <a href="https://gitscore.cc" class="btn btn-ghost" target="_blank" rel="noopener">
+        ★ View on GitHub
+      </a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="emo">📥</span><strong>184,000+</strong> downloads</div>
+      <div class="stat"><span class="emo">🏷️</span><strong>v4.2.0</strong> latest release</div>
+      <div class="stat"><span class="emo">🪟</span><strong>Windows 10 / 11</strong></div>
+      <div class="stat"><span class="emo">🆓</span><strong>Free &amp; open source</strong></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= FEATURES ================= -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Features</span>
+      <h2>Every MM2 tool you need, in one hub</h2>
+      <p>Six focused scripts built for Murder Mystery 2 — clean, lightweight, and compatible with popular Windows executors.</p>
+    </div>
+
+    <div class="features">
+      <article class="card">
+        <div class="icon">🎯</div>
+        <h3>Aimbot</h3>
+        <p>Smoothed target locking for the murderer and sheriff with adjustable FOV, prediction, and hotkey toggles for clean, controllable aim.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">👁️</div>
+        <h3>ESP</h3>
+        <p>See every role through walls — murderer, sheriff, and innocents — with name tags, distance readouts, and color-coded box highlights.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🧲</div>
+        <h3>Auto-Pickup</h3>
+        <p>Automatically grabs dropped knives, coins, and gun drops the moment they spawn, so you're always armed before the next encounter.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🪙</div>
+        <h3>Coin Farm</h3>
+        <p>Idle-friendly coin farming loop that collects round rewards and repeats matches efficiently, with a configurable stop condition.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🔪</div>
+        <h3>Knife Throw Assist</h3>
+        <p>Trajectory prediction for thrown knives with lead compensation — land long-range throws on moving targets far more consistently.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🧩</div>
+        <h3>Executor Ready</h3>
+        <p>Single-file Lua scripts with a built-in config menu. Paste, execute, and toggle modules — no dependencies or extra loaders required.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how-it-works">
+  <div class="wrap">
+    <div class="sec-head
